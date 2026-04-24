@@ -3,6 +3,8 @@ sudo apt install snort -y
 sudo apt update
 sudo apt install curl -y
 gedit /etc/snort/rules/local.rules
+#add rules below
+
 sudo snort -T -c /etc/snort/snort.conf
 ip a 
 sudo snort -A console -q -c /etc/snort/snort.conf -i wlp2s0
