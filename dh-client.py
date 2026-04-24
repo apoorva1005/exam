@@ -1,30 +1,21 @@
-import socket
+# Public values
+p = 23
+g = 5
 
-s = socket.socket()
-s.connect(("localhost", 12345))
+# Private keys
+x = int(input("Enter client private key (x): "))
+y = int(input("Enter server private key (y): "))
 
-# send request
-s.send("Request".encode())
+# Public keys
+R1 = pow(g, x, p)   # g^x mod p
+R2 = pow(g, y, p)   # g^y mod p
 
-# receive P and G
-data = s.recv(1024).decode()
-P, G = map(int, data.split(","))
-print("P:", P, "G:", G)
+print("R1 (Client public):", R1)
+print("R2 (Server public):", R2)
 
-# receive R2
-R2 = int(s.recv(1024).decode())
+# Shared secret key
+K1 = pow(R2, x, p)  # (R2)^x mod p
+K2 = pow(R1, y, p)  # (R1)^y mod p
 
-# choose private key
-X = int(input("Enter private key X: "))
-
-# calculate R1
-R1 = pow(G, X, P)
-s.send(str(R1).encode())
-
-print("Received R2:", R2)
-
-# secret key
-key = pow(R2, X, P)
-print("Client Secret Key:", key)
-
-s.close()
+print("Client Secret Key:", K1)
+print("Server Secret Key:", K2)
