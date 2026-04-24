@@ -1,29 +1,66 @@
+sudo scapy
+sudo apt update
+sudo apt install wireshark -y
+sudo wireshark
+
+
 # 1. ACK response (SYN+ACK received)
 send(IP(src="172.16.1.10", dst="10.10.10.11")/TCP(flags="A", seq=201, ack=102))
+
+tcp.flags.ack == 1
+
 
 # 2. TCP data response (10 bytes)
 send(IP(src="192.16.1.2", dst="10.1.2.3")/TCP(seq=15001, ack=9101)/("X"*10))
 
+
+tcp.len > 0
+
+
 # 3. ICMP with TTL=245
 send(IP(dst="172.16.2.231", ttl=245)/ICMP())
+
+icmp
+
 
 # 4. TCP port scan (1–1024)
 sr(IP(dst="10.0.0.2")/TCP(dport=(1,1024), flags="S"))
 
+
+tcp.flags.syn == 1 && tcp.flags.ack == 0
+
+
 # 5. SYN scan on specific ports
 send(IP(src="5.6.7.8", dst="1.2.3.4")/TCP(dport=[22,80,21,443], flags="S"))
 
+
+tcp.port == 22 || tcp.port == 80 || tcp.port == 21 || tcp.port == 443
 # 6. TCP with payload
 send(IP(dst="147.125.1.15")/TCP()/"#!/bin/bash")
+
+
+tcp contains "#!/bin/bash"
+
 
 # 7. ICMP reply with TTL=128
 send(IP(src="10.1.1.100", dst="10.1.1.101", ttl=128)/ICMP(type=0))
 
+
+icmp.type == 0
+
+
 # 8. TCP FIN+PUSH+URG
 send(IP(dst="192.168.1.10")/TCP(dport=666, flags="FPU"))
 
+
+tcp.flags.fin == 1 && tcp.flags.push == 1 && tcp.flags.urg == 1
 # 9. ARP request
 sendp(Ether(src="aa:aa:aa:aa:aa:aa")/ARP(psrc="172.16.15.100", pdst="172.16.15.200"))
 
+
+arp
+
 # 10. SYN-ACK response (server reply)
 send(IP(src="172.16.15.100", dst="172.16.15.200")/TCP(sport=80, dport=4580, flags="SA"))
+
+tcp.flags.syn == 1 && tcp.flags.ack == 1

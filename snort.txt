@@ -1,3 +1,10 @@
+sudo apt update
+sudo apt install snort -y
+gedit /etc/snort/rules/local.rules
+sudo snort -T -c /etc/snort/snort.conf
+ip a 
+sudo snort -A console -q -c /etc/snort/snort.conf -i wlp2s0
+
 # 1. Access to craigslist
 alert tcp any any -> any 80 (msg:"Access to craigslist"; content:"Host: craigslist.org"; http_header; sid:1001;)
 
