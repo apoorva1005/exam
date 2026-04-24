@@ -1,5 +1,7 @@
 sudo apt update
 sudo apt install snort -y
+sudo apt update
+sudo apt install curl -y
 gedit /etc/snort/rules/local.rules
 sudo snort -T -c /etc/snort/snort.conf
 ip a 
@@ -10,6 +12,7 @@ alert tcp any any -> any 80 (msg:"Access to craigslist"; content:"Host: craigsli
 
 # 2. Scan Detection
 alert tcp any any -> any any (flags:S; msg:"SYN Scan"; sid:1002;)
+sudo nmap -sS 127.0.0.1
 alert udp any any -> any any (msg:"UDP Scan"; sid:1003;)
 alert tcp any any -> any any (flags:F; msg:"FIN Scan"; sid:1004;)
 alert tcp any any -> any any (flags:0; msg:"NULL Scan"; sid:1005;)
