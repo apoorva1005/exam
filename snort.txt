@@ -1,0 +1,35 @@
+# 1. Access to craigslist
+alert tcp any any -> any 80 (msg:"Access to craigslist"; content:"Host: craigslist.org"; http_header; sid:1001;)
+
+# 2. Scan Detection
+alert tcp any any -> any any (flags:S; msg:"SYN Scan"; sid:1002;)
+alert udp any any -> any any (msg:"UDP Scan"; sid:1003;)
+alert tcp any any -> any any (flags:F; msg:"FIN Scan"; sid:1004;)
+alert tcp any any -> any any (flags:0; msg:"NULL Scan"; sid:1005;)
+alert tcp any any -> any any (flags:FPU; msg:"XMAS Scan"; sid:1006;)
+alert tcp any any -> any any (msg:"TCP Scan"; sid:1007;)
+alert tcp any any -> any any (flags:PA; msg:"PSH ACK Scan"; sid:1008;)
+
+# 3. SQL Injection
+alert tcp any any -> any 80 (msg:"SQL Injection Attempt"; content:"' OR 1=1"; nocase; sid:1009;)
+
+# 4. XSS Detection
+alert tcp any any -> any 80 (msg:"XSS Attack"; content:"<script>"; nocase; sid:1010;)
+
+# 5. SYN Flood
+alert tcp any any -> any any (flags:S; msg:"SYN Flood"; detection_filter:track by_src, count 10, seconds 5; sid:1011;)
+
+# 6. UDP Flood
+alert udp any any -> any any (msg:"UDP Flood"; detection_filter:track by_src, count 10, seconds 5; sid:1012;)
+
+# 7. Email EXE Attachment
+alert tcp any any -> any 25 (msg:"Email EXE Attachment"; content:".exe"; sid:1013;)
+
+# 8. FTP Usage
+alert tcp any any -> any 21 (msg:"FTP Usage Detected"; sid:1014;)
+
+# 9. BitTorrent Traffic
+alert tcp any any -> any any (msg:"BitTorrent Traffic"; content:"BitTorrent"; sid:1015;)
+
+# 10. SSH Brute Force
+alert tcp any any -> any 22 (msg:"SSH Brute Force"; detection_filter:track by_src, count 3, seconds 60; sid:1016;)
