@@ -25,11 +25,20 @@ alert tcp any any -> any any (flags:PA; msg:"PSH ACK Scan"; sid:1008;)
 # 3. SQL Injection
 alert tcp any any -> any 80 (msg:"SQL Injection Attempt"; content:"' OR 1=1"; nocase; sid:1009;)
 
+
+curl "http://example.com/index.php?id=1' OR 1=1"
+
 # 4. XSS Detection
 alert tcp any any -> any 80 (msg:"XSS Attack"; content:"<script>"; nocase; sid:1010;)
 
+curl "http://example.com/?q=<script>alert(1)</script>"
+
 # 5. SYN Flood
 alert tcp any any -> any any (flags:S; msg:"SYN Flood"; detection_filter:track by_src, count 10, seconds 5; sid:1011;)
+
+
+for i in {1..20}; do curl http://127.0.0.1 & done
+
 
 # 6. UDP Flood
 alert udp any any -> any any (msg:"UDP Flood"; detection_filter:track by_src, count 10, seconds 5; sid:1012;)
@@ -40,8 +49,14 @@ alert tcp any any -> any 25 (msg:"Email EXE Attachment"; content:".exe"; sid:101
 # 8. FTP Usage
 alert tcp any any -> any 21 (msg:"FTP Usage Detected"; sid:1014;)
 
+
+ftp localhost
+
+
 # 9. BitTorrent Traffic
 alert tcp any any -> any any (msg:"BitTorrent Traffic"; content:"BitTorrent"; sid:1015;)
 
 # 10. SSH Brute Force
 alert tcp any any -> any 22 (msg:"SSH Brute Force"; detection_filter:track by_src, count 3, seconds 60; sid:1016;)
+
+for i in {1..5}; do ssh localhost; done
