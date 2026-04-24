@@ -1,5 +1,6 @@
 sudo scapy
 sudo apt update
+#new terminal
 sudo apt install wireshark -y
 sudo wireshark
 
